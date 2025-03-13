@@ -25,7 +25,7 @@ Windows Server 2008以前のOSはサポート対象外です。
 また、Windows Server 2012、Windows Server 2016は動作環境の都合上サポート対象外とさせていただきます。
 ご了承ください。
 
-# Windows Embedded 
+# Windows Embedded (Windows IoT)
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
