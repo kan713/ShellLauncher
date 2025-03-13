@@ -62,7 +62,7 @@ LTSCに関しては2019年リリースより以前のものは動作対象外で
 
 Copyright 2021-2025 ykFred_699 Allright reserved.
 
-# Shell launcher dedicated to mycla server (for self-satisfaction)
+# Shell launcher dedicated to Minecraft Server (for self-satisfaction)
 This shell launcher is a self-satisfied creation of unknown use.  
 The source code is not disclosed.  
 Please be sure to use this software at your own risk.  
