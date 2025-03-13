@@ -94,14 +94,14 @@ Please understand this.
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
+* Windows 10 IoT Enterprise LTSC 2021
+* Windows 11 IoT Enterprise LTSC 2024
 If you are using Windows Embedded  
 Use with a maximum of 15 participants.  
 Also, when embedded in an OS, use it for other purposes.  
 It is strictly prohibited to use it for any other purpose.
 
 # Windows For LTSC
-* Windows 10 IoT Enterprise LTSC 2021
-* Windows 11 IoT Enterprise LTSC 2024
 * Windows 10 Enterprise LTSC 2021
 * Windows 11 Enterprise LTSC 2024
 As for client editions such as Windows 10 Home and Pro, the OS is not eligible for operation.  
