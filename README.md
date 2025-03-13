@@ -91,7 +91,7 @@ Operating systems prior to Windows Server 2008 are not supported.
 Windows Server 2012 and Windows Server 2016 are not supported due to their operating environment.
 Please understand this.
 
-# Windows Embedded 
+# Windows Embedded (Windows IoT)
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
