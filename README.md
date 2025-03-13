@@ -29,15 +29,15 @@ Windows Server 2008以前のOSはサポート対象外です。
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
+* Windows 10 IoT Enterprise LTSC 2021
+* Windows 11 IoT Enterprise LTSC 2024
 
 Windows Embeddedを使用する場合は
 最大15人の参加を想定して使用してください。  
 また、OSに組み込んだ場合は別の用途に使用することを
 固く禁じております。
 
-# Windows For LTSC
-* Windows 10 IoT Enterprise LTSC 2021
-* Windows 11 IoT Enterprise LTSC 2024
+# Windows For Enterprise LTSC
 * Windows 10 Enterprise LTSC 2021
 * Windows 11 Enterprise LTSC 2024
 
