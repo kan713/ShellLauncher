@@ -1,4 +1,4 @@
-# 用途不明のシェルランチャー
+# マイクラサーバー専用のシェルランチャー (自己満足するため)
 このシェルランチャーは、自己満足で作成した用途不明のものです。  
 ソースコードは公開しておりません。  
 本ソフトウェアを使用する際は必ず自己責任でお使いください。  
@@ -62,7 +62,7 @@ LTSCに関しては2019年リリースより以前のものは動作対象外で
 
 Copyright 2021-2025 ykFred_699 Allright reserved.
 
-# Shell launcher of unknown use
+# Shell launcher dedicated to mycla server (for self-satisfaction)
 This shell launcher is a self-satisfied creation of unknown use.  
 The source code is not disclosed.  
 Please be sure to use this software at your own risk.  
