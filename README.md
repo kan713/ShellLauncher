@@ -86,6 +86,7 @@ Enterprise series such as Datacenter editions will work but are not supported.
 * Windows Server 2019
 * Windows Server 2022
 * Windows Server 2025
+
 Operating systems prior to Windows Server 2008 are not supported.  
 Windows Server 2012 and Windows Server 2016 are not supported due to their operating environment.
 Please understand this.
@@ -96,6 +97,7 @@ Please understand this.
 * Windows 11 IoT Enterprise
 * Windows 10 IoT Enterprise LTSC 2021
 * Windows 11 IoT Enterprise LTSC 2024
+
 If you are using Windows Embedded  
 Use with a maximum of 15 participants.  
 Also, when embedded in an OS, use it for other purposes.  
@@ -104,6 +106,7 @@ It is strictly prohibited to use it for any other purpose.
 # Windows For LTSC
 * Windows 10 Enterprise LTSC 2021
 * Windows 11 Enterprise LTSC 2024
+
 As for client editions such as Windows 10 Home and Pro, the OS is not eligible for operation.  
 As for LTSC, anything prior to the 2019 release is not supported.  
 LTSC 2019 or later is considered for development environment use, but not for use as a production server or other applications.
