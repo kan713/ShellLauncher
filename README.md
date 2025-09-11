@@ -1,6 +1,6 @@
 # マイクラサーバー専用のシェルランチャー (自己満足するため)
 このシェルランチャーは、自己満足で作成した用途不明のものです。  
-ソースコードは公開しておりません。  
+ソースコードは公開しておりません。 → ソースコードを公開しました  
 本ソフトウェアを使用する際は必ず自己責任でお使いください。  
 使用すること自体は無料でお使いいただけます。  
 改変して再配布などが発覚次第、ソフトウェアの配布を停止し、  
@@ -64,7 +64,7 @@ Copyright 2021-2025 ykFred_699 Allright reserved.
 
 # Shell launcher dedicated to Minecraft Server (for self-satisfaction)
 This shell launcher is a self-satisfied creation of unknown use.  
-The source code is not disclosed.  
+The source code is not disclosed.  → Change code to public
 Please be sure to use this software at your own risk.  
 Use itself is free of charge.  
 If we discover that the software has been modified and redistributed, we will stop distributing the software,  
