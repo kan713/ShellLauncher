@@ -2,9 +2,10 @@
 このシェルランチャーは、自己満足で作成した用途不明のものです。  
 ソースコードは公開しておりません。 → ソースコードを公開しました  
 本ソフトウェアを使用する際は必ず自己責任でお使いください。  
-使用すること自体は無料でお使いいただけます。  
-改変して再配布などが発覚次第、ソフトウェアの配布を停止し、  
-今お使いいただいてるものもすべて削除するよう申請します。  
+
+無茶な設定はしないように！！！！
+無茶苦茶にすると予期しないエラーや動作をして
+システムが不安定になる可能性があります！！！
 
 改変する際は各自のコンピューターまたはサーバーでお使いください。  
 OSにコミットする際は安定した環境で、自分のコンピュータでお使い頂ますようお願い申し上げます。
@@ -63,12 +64,13 @@ LTSCに関しては2019年リリースより以前のものは動作対象外で
 Copyright 2021-2025 ykFred_699 Allright reserved.
 
 # Shell launcher dedicated to Minecraft Server (for self-satisfaction)
-This shell launcher is a self-satisfied creation of unknown use.  
-The source code is not disclosed.  → Change code to public
-Please be sure to use this software at your own risk.  
-Use itself is free of charge.  
-If we discover that the software has been modified and redistributed, we will stop distributing the software,  
-We will request that you delete all of the software that you are currently using.
+This shell launcher is a self-indulgent creation with no clear purpose.  
+The source code is not publicly available. → Source code has been released.  
+Use this software entirely at your own risk.  
+
+DO NOT make reckless settings!!!!  
+Making reckless changes may cause unexpected errors or behavior,  
+potentially destabilizing your system!!!!
 
 If you modify the software, please use it on your own computer or server.  
 If you commit to an operating system, please use it on your own computer in a stable environment.
