@@ -72,7 +72,7 @@ Windows Server 2008以前のOSはサポート対象外です。
 
 Copyright 2021-2025 ykFred_699 Allright reserved.
 
-Minecraft Server Dedicated Shell Launcher (For Personal Satisfaction)
+# English
 
 This shell launcher was created purely for personal satisfaction and experimental purposes.
 The source code is now publicly available.
