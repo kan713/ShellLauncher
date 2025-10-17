@@ -34,19 +34,26 @@ Windows Server 2008以前のOSはサポート対象外です。
 * Windows 10 IoT Enterprise LTSC 2021
 * Windows 11 IoT Enterprise LTSC 2024
 
-自己責任でかつ、
-Windows Embeddedを使用する場合は
-最大15人の参加を想定して使用してください。  
-また、OSに組み込んだ場合は別の用途に使用することを
-固く禁じております。
+制約事項
+* 本番環境として使用禁止
+* 最大15人の参加を想定して使用 
+* 特定の機能以外の使用禁止
 
 # Windows For Enterprise LTSC
 * Windows 10 Enterprise LTSC 2021
 * Windows 11 Enterprise LTSC 2024
 
-Windows 10 HomeやProなどのクライアントエディションに関してはOSの動作対象外です。  
-LTSCに関しては2019年リリースより以前のものは動作対象外です。  
-また、LTSC 2019以降のものは開発環境用として動作対象とみなしますが、本番用サーバーなどの用途としての使用は対象外です。
+制約事項
+* 本番環境として使用禁止
+* 最大15人の参加を想定して使用 
+* 特定の機能以外の使用禁止
+
+# 対象外
+* Windows 10 HomeやProなどの一般向け
+* Windows 10 Ent 2016 LTSB以前
+* Windows Server 2003 R2以前
+
+予期せぬトラブルやカーネルバージョン不一致の可能性あり
 
 # 本ソフトウェアをOSに組み込んでinstall.wimなどのファイルにする場合について
 本ソフトウェアを組み込んでinstall.wimなどのインストールパッケージにする場合、  
@@ -65,70 +72,102 @@ LTSCに関しては2019年リリースより以前のものは動作対象外で
 
 Copyright 2021-2025 ykFred_699 Allright reserved.
 
-# Shell launcher dedicated to Minecraft Server (for self-satisfaction)
-This shell launcher is a self-indulgent creation with no clear purpose.  
-The source code is not publicly available. → Source code has been released.  
-Use this software entirely at your own risk.  
+Minecraft Server Dedicated Shell Launcher (For Personal Satisfaction)
 
-DO NOT make reckless settings!!!!  
-Making reckless changes may cause unexpected errors or behavior,  
-potentially destabilizing your system!!!!
+This shell launcher was created purely for personal satisfaction and experimental purposes.
+The source code is now publicly available.
+Please use this software at your own risk.
 
-If you modify the software, please use it on your own computer or server.  
-If you commit to an operating system, please use it on your own computer in a stable environment.
+Do not apply reckless settings!
+Misconfiguration may result in unexpected errors or system instability.
 
-The following OS editions are supported by this software.
+When modifying this software, please use it only on your own computer or server.
+If integrating it into your OS, make sure to do so in a stable environment.
 
-The OS editions supported by this software are listed below.  
-All server OSs for this software depend on Windows.  
-Also, all Windows Server editions only work with Standard editions.  
-Enterprise series such as Datacenter editions will work but are not supported.
+Supported OS Editions
 
-# Windows Server OS
-* Windows Server 2008 R2
-* Windows Server 2012 R2
-* Windows Server 2019
-* Windows Server 2022
-* Windows Server 2025
+This software depends entirely on Windows OS.
+Only Standard editions of Windows Server are officially supported.
+Datacenter or other Enterprise editions may work but are not supported.
 
-Operating systems prior to Windows Server 2008 are not supported.  
-Windows Server 2012 and Windows Server 2016 are not supported due to their operating environment.
-Please understand this.
+Windows Server OS
 
-# Windows Embedded (Windows IoT)
-* Windows Embedded Standard 7
-* Windows 10 IoT Enterprise
-* Windows 11 IoT Enterprise
-* Windows 10 IoT Enterprise LTSC 2021
-* Windows 11 IoT Enterprise LTSC 2024
+Windows Server 2008 R2
 
-If you are using Windows Embedded  
-Use with a maximum of 15 participants.  
-Also, when embedded in an OS, use it for other purposes.  
-It is strictly prohibited to use it for any other purpose.
+Windows Server 2012 R2
 
-# Windows For LTSC
-* Windows 10 Enterprise LTSC 2021
-* Windows 11 Enterprise LTSC 2024
+Windows Server 2019
 
-As for client editions such as Windows 10 Home and Pro, the OS is not eligible for operation.  
-As for LTSC, anything prior to the 2019 release is not supported.  
-LTSC 2019 or later is considered for development environment use, but not for use as a production server or other applications.
+Windows Server 2022
 
-# When this software is incorporated into the OS and made into a file such as install.wim
-When incorporating this software into an installation package such as install.wim,  
-Please be sure to read the following software license carefully before proceeding.
+Windows Server 2025
 
-* MC Server Soft
-* Microsoft Windows
-* Terms of this Software License
+Note:
 
-All releases are beta releases at this time.  
-Please be aware that all releases are beta releases.
+Windows Server 2008 and earlier are not supported.
 
-This software is produced by: ゆっくりFred  
-Copyrights are held by the creator of this software.  
-However, if you want to distribute the modified version of this software by a third party, please contact the creator of this software.
+Windows Server 2012 and 2016 are excluded due to environmental constraints.
+
+Windows Embedded / Windows IoT
+
+Windows Embedded Standard 7
+
+Windows 10 IoT Enterprise
+
+Windows 11 IoT Enterprise
+
+Windows 10 IoT Enterprise LTSC 2021
+
+Windows 11 IoT Enterprise LTSC 2024
+
+Restrictions:
+
+Not for production environments
+
+Intended for up to 15 participants
+
+Use only for the specified features
+
+Windows Enterprise LTSC
+
+Windows 10 Enterprise LTSC 2021
+
+Windows 11 Enterprise LTSC 2024
+
+Restrictions:
+
+Not for production environments
+
+Intended for up to 15 participants
+
+Use only for the specified features
+
+Unsupported OS
+
+Windows 10 Home or Pro editions
+
+Windows 10 Enterprise 2016 LTSB or earlier
+
+Windows Server 2003 R2 and earlier
+
+Warning: Unexpected issues or kernel version mismatches may occur.
+
+Integrating into OS Installation Packages
+
+If integrating this software into an OS install package (e.g., install.wim), please carefully review the licenses of the following before proceeding:
+
+MC Server Soft
+
+Microsoft Windows
+
+This software license agreement
+
+This software is currently released as beta.
+Thank you for your understanding.
+
+Software Author: Yukkuri Fred
+Copyright belongs to the software author.
+If a third party modifies and distributes the software, please contact the author beforehand.
 
 Copyright 2021-2025 ykFred_699 Allright reserved.
-Translated with DeepL.com (free version)
+
