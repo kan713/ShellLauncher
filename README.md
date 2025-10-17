@@ -90,65 +90,43 @@ This software depends entirely on Windows OS.
 Only Standard editions of Windows Server are officially supported.
 Datacenter or other Enterprise editions may work but are not supported.
 
-Windows Server OS
-
-Windows Server 2008 R2
-
-Windows Server 2012 R2
-
-Windows Server 2019
-
-Windows Server 2022
-
-Windows Server 2025
+# Windows Server OS
+* Windows Server 2008 R2
+* Windows Server 2012 R2
+* Windows Server 2019
+* Windows Server 2022
+* Windows Server 2025
 
 Note:
 
-Windows Server 2008 and earlier are not supported.
+* Windows Server 2008 and earlier are not supported.
+* Windows Server 2012 and 2016 are excluded due to environmental constraints.
 
-Windows Server 2012 and 2016 are excluded due to environmental constraints.
-
-Windows Embedded / Windows IoT
-
-Windows Embedded Standard 7
-
-Windows 10 IoT Enterprise
-
-Windows 11 IoT Enterprise
-
-Windows 10 IoT Enterprise LTSC 2021
-
-Windows 11 IoT Enterprise LTSC 2024
+# Windows Embedded (Windows IoT)
+* Windows Embedded Standard 7
+* Windows 10 IoT Enterprise
+* Windows 11 IoT Enterprise
+* Windows 10 IoT Enterprise LTSC 2021
+* Windows 11 IoT Enterprise LTSC 2024
 
 Restrictions:
+* Not for production environments
+* Intended for up to 15 participants
+* Use only for the specified features
 
-Not for production environments
-
-Intended for up to 15 participants
-
-Use only for the specified features
-
-Windows Enterprise LTSC
-
-Windows 10 Enterprise LTSC 2021
-
-Windows 11 Enterprise LTSC 2024
+# Windows For Enterprise LTSC
+* Windows 10 Enterprise LTSC 2021
+* Windows 11 Enterprise LTSC 2024
 
 Restrictions:
+* Not for production environments
+* Intended for up to 15 participants
+* Use only for the specified features
 
-Not for production environments
-
-Intended for up to 15 participants
-
-Use only for the specified features
-
-Unsupported OS
-
-Windows 10 Home or Pro editions
-
-Windows 10 Enterprise 2016 LTSB or earlier
-
-Windows Server 2003 R2 and earlier
+# Unsupported OS
+* Windows 10 Home or Pro editions
+* Windows 10 Enterprise 2016 LTSB or earlier
+* Windows Server 2003 R2 and earlier
 
 Warning: Unexpected issues or kernel version mismatches may occur.
 
@@ -165,7 +143,7 @@ This software license agreement
 This software is currently released as beta.
 Thank you for your understanding.
 
-Software Author: Yukkuri Fred
+Software Author: ykfred_699
 Copyright belongs to the software author.
 If a third party modifies and distributes the software, please contact the author beforehand.
 
