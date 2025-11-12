@@ -23,6 +23,8 @@ OSにコミットする際は安定した環境で、自分のコンピュータ
 またWindows ServerエディションはすべてStandardエディションのみ動作します。  
 Datacenterエディションなどのエンタープライズシリーズは動作しますがサポート対象外です。
 
+## 対象のWindows エディション
+
 ### Windows Server OS
 * Windows Server 2008 R2
 * Windows Server 2012 R2
