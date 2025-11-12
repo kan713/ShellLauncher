@@ -3,7 +3,7 @@
 ソースコードは公開しておりません。 → ソースコードを公開しました  
 本ソフトウェアを使用する際は必ず自己責任でお使いください。  
 
-###ドキュメントについて
+## ドキュメントについて
 
 下記のGoogle Driveにpdfを公開中
 https://drive.google.com/file/d/19cAzcT2R6E5SQnot3yOcxvUkj5k8s2uq/view?usp=sharing
