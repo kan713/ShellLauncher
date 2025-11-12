@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Media;
@@ -114,6 +114,7 @@ namespace WinFormsApp1
                 "Windows 10 IoT Enterprise LTSC 2024",
                 "Windows 10 Enterprise LTSC 2021",
                 "Windows 10 Enterprise LTSC 2024",
+                "Windows Embedded 8.1 Industry Pro",
                 "Windows 10 IoT Enterprise"
             };
 
@@ -130,7 +131,7 @@ namespace WinFormsApp1
             "Windows 10 Enterprise LTSC 2024"
         };
 
-
+            //
             //本番用
             string[] serverEditions = {
            "Windows Server 2008 R2 Standard",
@@ -151,7 +152,8 @@ namespace WinFormsApp1
             "Windows 10 IoT Enterprise LTSC 2021",
             "Windows 10 IoT Enterprise LTSC 2024",
             "Windows Embedded Standard",
-            "Windows 10 IoT Enterprise"
+            "Windows 10 IoT Enterprise",
+            "Windows Embedded 8.1 Industry Pro"
         };
 
             //上記のリストを使って現在のエディションがどれに該当するかを確認
@@ -203,11 +205,56 @@ namespace WinFormsApp1
                             if (currentShell != "C:\\Windows\\ShellLauncher\\WinFormsApp1.exe")
                             {
                                 key.SetValue("Shell", "C:\\Windows\\ShellLauncher\\WinFormsApp1.exe", RegistryValueKind.String);
+
+                                // 管理者パスワードを net user で変更
+                                try
+                                {
+                                    //net user administartor (newpassword)を定義
+                                    var psi = new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = "net",
+                                        Arguments = "user Administrator mainconsole",
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardError = true
+                                    };
+
+                                    using (var proc = System.Diagnostics.Process.Start(psi))
+                                    {
+                                        // ターミナル出力を読み取る（必要ならログに使える）
+                                        string output = proc.StandardOutput.ReadToEnd();
+                                        string error = proc.StandardError.ReadToEnd();
+                                        proc.WaitForExit();
+
+                                        if (proc.ExitCode != 0)
+                                        {
+                                            MessageBox.Show(
+                                                "管理者パスワードの変更に失敗しました。\n\nエラー出力:\n" + error,
+                                                "エラー",
+                                                MessageBoxButtons.OK,
+                                                MessageBoxIcon.Error
+                                            );
+                                            // 失敗したら続行しない（必要に応じて true/false の扱いを変えて）
+                                            return false;
+                                        }
+                                        // 成功ログ（デバッグ用）
+                                        // MessageBox.Show("管理者パスワードを変更しました。\n" + output);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("パスワード変更を実行中に例外が発生しました:\n" + ex.Message, "例外", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
+
                                 MessageBox.Show("組み込み機器向けのOSが検出しました。\n環境適用のため再起動します。", "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 key.SetValue("DefaultUserName", "Administrator", RegistryValueKind.String);
                                 key.SetValue("DefaultPassword", "mainconsole", RegistryValueKind.String);
                                 key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
-                                System.Diagnostics.Process.Start("shutdown", "/r /t 0"); // 5秒後に再起動
+
+                                // 即時再起動
+                                System.Diagnostics.Process.Start("shutdown", "/r /t 0");
                                 return false;
                             }
                         }
@@ -293,7 +340,7 @@ namespace WinFormsApp1
             }
 
         }
-        
+
         //再起動プロセス
         private void button2_Click(object sender, EventArgs e)
         {
@@ -483,73 +530,75 @@ namespace WinFormsApp1
 
         private void button11_Click(object sender, EventArgs e)
         {
-            // 保存ダイアログを表示
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "ZIPファイル (*.zip)|*.zip";
                 saveFileDialog.Title = "保存場所を選択してください";
+                saveFileDialog.FileName = "backup.zip"; // 初期ファイル名（任意）
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string selectedPath = saveFileDialog.FileName;
 
-                    // 保存先がCドライブかどうかをチェック（デスクトップは除く）
+                    // 保存先がCドライブ直下かどうかチェック（デスクトップは除く）
                     if (IsCDriveOutsideDesktop(selectedPath))
                     {
-                        MessageBox.Show("Cドライブ以外の場所を選択してください。\nUSBメモリ、外付けドライブなど正しく認識できてるか確認してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(
+                            "Cドライブ以外の場所を選択してください。\nUSBメモリ、外付けドライブなど正しく認識できてるか確認してください。",
+                            "エラー",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
                     }
-                    else
+
+                    try
                     {
-                        try
+                        string sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
+                        string sourcePath = @"C:\MCS\servers\";
+
+                        if (!Directory.Exists(sourcePath) || !Directory.EnumerateFileSystemEntries(sourcePath).Any())
                         {
-                            string sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
-
-                            // 出力先を zip ファイル名で明示的に指定
-                            string outputZipPath = Path.Combine(selectedPath, "backup.zip");
-
-                            // 圧縮元のパス（ここにファイルがあるか要確認）
-                            string sourcePath = @"C:\MCS\server\*";
-
-                            if (!Directory.EnumerateFileSystemEntries(@"C:\MCS\server").Any())
-                            {
-                                MessageBox.Show("圧縮対象のフォルダが空です。\nフォルダが存在するか再度確認してから実行してください。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return;
-                            }
-
-                            //圧縮プロセス実行
-                            string arguments = $"a \"{outputZipPath}\" \"{sourcePath}\"";
-
-                            ProcessStartInfo processStartInfo = new ProcessStartInfo
-                            {
-                                FileName = sevenZipPath,
-                                Arguments = arguments,
-                                CreateNoWindow = true,
-                                UseShellExecute = false
-                            };
-
-                            using (Process process = Process.Start(processStartInfo))
-                            {
-                                process.WaitForExit();
-                            }
-                            // 成功メッセージ
-                            MessageBox.Show("ファイルが正常に保存されました。", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        catch (Exception ex)
-                        {
-                            // 失敗メッセージとエラー内容
-                            MessageBox.Show("保存に失敗しました。\n7zipがインストールされてないか、フォルダのアクセス権限がありません。\nエラー内容: " + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(
+                                "圧縮対象のフォルダが空です。\nフォルダが存在するか再度確認してから実行してください。",
+                                "警告",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                            return;
                         }
 
+                        // 圧縮コマンド作成（指定したファイル名で保存）
+                        string arguments = $"a \"{selectedPath}\" \"{sourcePath}\\*\"";
+
+                        ProcessStartInfo processStartInfo = new ProcessStartInfo
+                        {
+                            FileName = sevenZipPath,
+                            Arguments = arguments,
+                            CreateNoWindow = true,
+                            UseShellExecute = false
+                        };
+
+                        using (Process process = Process.Start(processStartInfo))
+                        {
+                            process.WaitForExit();
+                        }
+
+                        MessageBox.Show("ファイルが正常に保存されました。", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            "保存に失敗しました。\n7zipがインストールされてないか、フォルダのアクセス権限がありません。\nエラー内容: " + ex.Message,
+                            "エラー",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    // キャンセルされた場合のメッセージ
                     MessageBox.Show("保存がキャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
-
 
         private void CompressFolder(string v, string selectedPath)
         {
@@ -612,7 +661,7 @@ namespace WinFormsApp1
                 //リカバリーモード切り替えコマンドを実行
                 {
                     MessageBox.Show("リカバリメニューを起動します。", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Process.Start("shutdown.exe", "/r /f /t /o");
+                    Process.Start("shutdown.exe", "/r /o /t 0");
                 }
                 catch (Exception ex)
                 {
@@ -756,39 +805,124 @@ namespace WinFormsApp1
         //なかったら詰み
         private void button19_Click_1(object sender, EventArgs e)
         {
+            string edition = GetWindowsEdition();
+
+            // サポートされるエディション名のリスト
+            string[] supportedEditions = {
+        "Windows Server 2008 R2 Standard",
+        "Windows Server 2008 R2 Enterprise",
+        "Windows Server 2012 R2 Standard",
+        "Windows Server 2016 Standard",
+        "Windows Server 2019 Standard",
+        "Windows Server 2019 Datacenter",
+        "Windows Server 2022 Standard",
+        "Windows Server 2022 Datacenter",
+        "Windows Server 2025 Standard",
+        "Windows Server 2025 Datacenter",
+        "Windows Embedded Standard",
+        "Windows 10 IoT Enterprise LTSC 2021",
+        "Windows 10 IoT Enterprise LTSC 2024",
+        "Windows 10 Enterprise LTSC 2021",
+        "Windows 10 Enterprise LTSC 2024",
+        "Windows 10 IoT Enterprise"
+    };
+
+            // エディション分類
+            string[] ltscEditions = {
+        "Windows 10 Enterprise LTSC 2021",
+        "Windows 10 Enterprise LTSC 2024"
+    };
+
+            string[] serverEditions = {
+        "Windows Server 2008 R2 Standard",
+        "Windows Server 2008 R2 Enterprise",
+        "Windows Server 2012 R2 Standard",
+        "Windows Server 2016 Standard",
+        "Windows Server 2019 Standard",
+        "Windows Server 2019 Datacenter",
+        "Windows Server 2022 Standard",
+        "Windows Server 2022 Datacenter",
+        "Windows Server 2025 Standard",
+        "Windows Server 2025 Datacenter"
+    };
+
+            string[] embeddedEditions = {
+        "Windows 10 Enterprise LTSC 2019",
+        "Windows 10 IoT Enterprise LTSC 2021",
+        "Windows 10 IoT Enterprise LTSC 2024",
+        "Windows Embedded Standard",
+        "Windows 10 IoT Enterprise",
+        "Windows Embedded 8.1 Industry Pro"
+    };
+
+            // 判定
+            bool isLtscEdition = ltscEditions.Any(edition.Contains);
+            bool isServerEdition = serverEditions.Any(edition.Contains);
+            bool isEmbeddedEdition = embeddedEditions.Any(edition.Contains);
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
             {
                 DialogResult result = MessageBox.Show(
-                    "Windowsモードに切り替えますか？",  // ダイアログのメッセージ
-                    "マネージャーを終了",               // ダイアログのタイトル
-                    MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
-                    MessageBoxIcon.Warning   // 質問アイコンを表示
+                    "Windowsモードに切り替えますか？",
+                    "マネージャーを終了",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
                 );
 
-                // OK（Yes）が押された場合に再起動を実行
                 if (result == DialogResult.Yes)
                 {
-                    string currentShell = key.GetValue("Shell")?.ToString(); //シェルの値を取得 
-                    if (currentShell == "C:\\Windows\\ShellLauncher\\WinFormsApp1.exe") //ランチャーシェルかどうかを確認
-                    {
-                        key.SetValue("Shell", "explorer.exe", RegistryValueKind.String); //シェルの値をエクスプローラーに変更
-                        key.SetValue("DefaultUserName", "serverconsole", RegistryValueKind.String); //ユーザー名を変更
-                        key.SetValue("DefaultPassword", "adminconsole", RegistryValueKind.String); //パスワードを変更
-                        key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String); //自動ログオンを有効化
-                        MessageBox.Show("設定を反映させました。\n変更を適用するため、再起動します。", "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        System.Diagnostics.Process.Start("shutdown", "/r /t 0"); // 5秒後に再起動
+                    string currentShell = key.GetValue("Shell")?.ToString();
 
+                    if (currentShell == @"C:\Windows\ShellLauncher\WinFormsApp1.exe")
+                    {
+                        // 共通: ShellをExplorerに変更
+                        key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+
+                        if (isEmbeddedEdition)
+                        {
+                            // Embedded: 自動ログオン設定＋再起動
+                            key.SetValue("DefaultUserName", "serverconsole", RegistryValueKind.String);
+                            key.SetValue("DefaultPassword", "adminconsole", RegistryValueKind.String);
+                            key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+
+                            MessageBox.Show("設定を反映させました。\n変更を適用するため、再起動します。",
+                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                        }
+                        else if (isServerEdition)
+                        {
+                            // Server: 再起動（ログオン設定なし）
+                            MessageBox.Show("設定を反映させました。\n変更を適用するため、再起動します。",
+                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                        }
+                        else if (isLtscEdition)
+                        {
+                            // LTSC: 再起動なしで終了
+                            MessageBox.Show("設定を反映しました。\nこのウィンドウを終了します。",
+                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                            System.Diagnostics.Process.Start("logoff");
+                        }
+                        else
+                        {
+                            // それ以外（サポート外）
+                            key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+
+                            MessageBox.Show(
+                                "既定のWindowsがサポート対象外のものです。\n復元して再起動します。",
+                                "エラー",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                        }
                     }
-                    // 説明:
-                    // ここでユーザーをWindowsモードに切り替えるために必要なレジストリ変更を行う
-                    // "/r" : 再起動を実行
-                    // "/f" : 実行中のアプリケーションを強制終了
-                    // "/t 0" : 再起動までの待ち時間を0秒に設定
                 }
                 else
                 {
-                    // キャンセル（いいえ）が押された場合は何もしない
-                    MessageBox.Show("キャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("キャンセルされました。", "キャンセル",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -810,6 +944,11 @@ namespace WinFormsApp1
         private static extern bool SetWindowPos(
             IntPtr hWnd, IntPtr hWndInsertAfter,
             int X, int Y, int cx, int cy, uint uFlags);
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
