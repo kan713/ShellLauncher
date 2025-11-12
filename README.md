@@ -3,6 +3,11 @@
 ソースコードは公開しておりません。 → ソースコードを公開しました  
 本ソフトウェアを使用する際は必ず自己責任でお使いください。  
 
+###ドキュメントについて
+
+下記のGoogle Driveにpdfを公開中
+https://drive.google.com/file/d/19cAzcT2R6E5SQnot3yOcxvUkj5k8s2uq/view?usp=sharing
+
 ~他人任せこそ正義~
 
 無茶な設定はしないように！！！
@@ -18,7 +23,7 @@ OSにコミットする際は安定した環境で、自分のコンピュータ
 またWindows ServerエディションはすべてStandardエディションのみ動作します。  
 Datacenterエディションなどのエンタープライズシリーズは動作しますがサポート対象外です。
 
-# Windows Server OS
+## Windows Server OS
 * Windows Server 2008 R2
 * Windows Server 2012 R2
 * Windows Server 2019
@@ -29,7 +34,7 @@ Windows Server 2008以前のOSはサポート対象外です。
 また、Windows Server 2012、Windows Server 2016は動作環境の都合上サポート対象外とさせていただきます。
 ご了承ください。
 
-# Windows Embedded (Windows IoT)
+## Windows Embedded (Windows IoT)
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
@@ -50,7 +55,7 @@ Windows Server 2008以前のOSはサポート対象外です。
 * 最大15人の参加を想定して使用 
 * 特定の機能以外の使用禁止
 
-# 対象外
+## 対象外
 * Windows 10 HomeやProなどの一般向け
 * Windows 10 Ent 2016 LTSB以前
 * Windows Server 2003 R2以前
@@ -92,7 +97,7 @@ This software depends entirely on Windows OS.
 Only Standard editions of Windows Server are officially supported.
 Datacenter or other Enterprise editions may work but are not supported.
 
-# Windows Server OS
+## Windows Server OS
 * Windows Server 2008 R2
 * Windows Server 2012 R2
 * Windows Server 2019
@@ -104,7 +109,7 @@ Note:
 * Windows Server 2008 and earlier are not supported.
 * Windows Server 2012 and 2016 are excluded due to environmental constraints.
 
-# Windows Embedded (Windows IoT)
+## Windows Embedded (Windows IoT)
 * Windows Embedded Standard 7
 * Windows 10 IoT Enterprise
 * Windows 11 IoT Enterprise
@@ -116,7 +121,7 @@ Restrictions:
 * Intended for up to 15 participants
 * Use only for the specified features
 
-# Windows For Enterprise LTSC
+## Windows For Enterprise LTSC
 * Windows 10 Enterprise LTSC 2021
 * Windows 11 Enterprise LTSC 2024
 
@@ -125,7 +130,7 @@ Restrictions:
 * Intended for up to 15 participants
 * Use only for the specified features
 
-# Unsupported OS
+## Unsupported OS
 * Windows 10 Home or Pro editions
 * Windows 10 Enterprise 2016 LTSB or earlier
 * Windows Server 2003 R2 and earlier
