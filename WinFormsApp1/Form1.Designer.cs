@@ -48,18 +48,17 @@
             button10 = new Button();
             folderBrowserDialog1 = new FolderBrowserDialog();
             button11 = new Button();
-            label6 = new Label();
             button12 = new Button();
-            button13 = new Button();
             button14 = new Button();
-            label7 = new Label();
-            button15 = new Button();
             button16 = new Button();
             button5 = new Button();
             button17 = new Button();
             button18 = new Button();
             label8 = new Label();
             button19 = new Button();
+            button13 = new Button();
+            label7 = new Label();
+            button15 = new Button();
             SuspendLayout();
             // 
             // button1
@@ -105,7 +104,7 @@
             // 
             monthCalendar1.CalendarDimensions = new Size(2, 2);
             monthCalendar1.Font = new Font("Yu Gothic UI Light", 9F);
-            monthCalendar1.Location = new Point(1081, 137);
+            monthCalendar1.Location = new Point(777, 127);
             monthCalendar1.Name = "monthCalendar1";
             monthCalendar1.TabIndex = 3;
             // 
@@ -133,7 +132,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(1251, 116);
+            label2.Location = new Point(947, 106);
             label2.Name = "label2";
             label2.Size = new Size(75, 15);
             label2.TabIndex = 6;
@@ -192,7 +191,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Yu Gothic UI", 20F);
-            label4.Location = new Point(1223, 66);
+            label4.Location = new Point(919, 56);
             label4.Name = "label4";
             label4.Size = new Size(119, 37);
             label4.TabIndex = 12;
@@ -202,7 +201,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Yu Gothic UI", 15F);
-            label5.Location = new Point(1223, 38);
+            label5.Location = new Point(919, 28);
             label5.Name = "label5";
             label5.Size = new Size(72, 28);
             label5.TabIndex = 13;
@@ -245,17 +244,6 @@
             button11.UseVisualStyleBackColor = true;
             button11.Click += button11_Click;
             // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Yu Gothic UI", 15F);
-            label6.Location = new Point(1608, 19);
-            label6.Name = "label6";
-            label6.Size = new Size(293, 84);
-            label6.TabIndex = 17;
-            label6.Text = "ベータ版です\r\n本システムを許可なく配布することは\r\n固く禁じております";
-            label6.TextAlign = ContentAlignment.TopRight;
-            // 
             // button12
             // 
             button12.Image = (Image)resources.GetObject("button12.Image");
@@ -268,16 +256,6 @@
             button12.UseVisualStyleBackColor = true;
             button12.Click += button12_Click;
             // 
-            // button13
-            // 
-            button13.Location = new Point(1741, 212);
-            button13.Name = "button13";
-            button13.Size = new Size(160, 33);
-            button13.TabIndex = 19;
-            button13.Text = "ライフサイクル";
-            button13.UseVisualStyleBackColor = true;
-            button13.Click += button13_Click;
-            // 
             // button14
             // 
             button14.Image = (Image)resources.GetObject("button14.Image");
@@ -289,27 +267,6 @@
             button14.TextAlign = ContentAlignment.BottomCenter;
             button14.UseVisualStyleBackColor = true;
             button14.Click += button14_Click;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(1806, 182);
-            label7.Name = "label7";
-            label7.Size = new Size(34, 15);
-            label7.TabIndex = 21;
-            label7.Text = "ツール";
-            // 
-            // button15
-            // 
-            button15.Image = (Image)resources.GetObject("button15.Image");
-            button15.Location = new Point(1741, 259);
-            button15.Name = "button15";
-            button15.Size = new Size(160, 87);
-            button15.TabIndex = 22;
-            button15.Text = "システム情報";
-            button15.TextAlign = ContentAlignment.BottomCenter;
-            button15.UseVisualStyleBackColor = true;
-            button15.Click += button15_Click_1;
             // 
             // button16
             // 
@@ -380,11 +337,42 @@
             button19.UseVisualStyleBackColor = true;
             button19.Click += button19_Click_1;
             // 
+            // button13
+            // 
+            button13.Location = new Point(1241, 72);
+            button13.Name = "button13";
+            button13.Size = new Size(160, 33);
+            button13.TabIndex = 19;
+            button13.Text = "ライフサイクル";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += button13_Click;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(1306, 42);
+            label7.Name = "label7";
+            label7.Size = new Size(34, 15);
+            label7.TabIndex = 21;
+            label7.Text = "ツール";
+            // 
+            // button15
+            // 
+            button15.Image = (Image)resources.GetObject("button15.Image");
+            button15.Location = new Point(1241, 119);
+            button15.Name = "button15";
+            button15.Size = new Size(160, 87);
+            button15.TabIndex = 22;
+            button15.Text = "システム情報";
+            button15.TextAlign = ContentAlignment.BottomCenter;
+            button15.UseVisualStyleBackColor = true;
+            button15.Click += button15_Click_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1913, 1061);
+            ClientSize = new Size(1436, 803);
             Controls.Add(button19);
             Controls.Add(label8);
             Controls.Add(button18);
@@ -396,7 +384,6 @@
             Controls.Add(button14);
             Controls.Add(button13);
             Controls.Add(button12);
-            Controls.Add(label6);
             Controls.Add(button11);
             Controls.Add(button10);
             Controls.Add(button9);
@@ -442,17 +429,16 @@
         private Button button10;
         private FolderBrowserDialog folderBrowserDialog1;
         private Button button11;
-        private Label label6;
         private Button button12;
-        private Button button13;
         private Button button14;
-        private Label label7;
-        private Button button15;
         private Button button16;
         private Button button5;
         private Button button17;
         private Button button18;
         private Label label8;
         private Button button19;
+        private Button button13;
+        private Label label7;
+        private Button button15;
     }
 }
