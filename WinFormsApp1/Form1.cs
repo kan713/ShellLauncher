@@ -58,6 +58,8 @@ namespace WinFormsApp1
             {
                 Process.Start("C:\\MCS\\mcss.exe");
             }
+            //net user administartor (newpassword)を定義
+            Process.Start("net", "user administrator /active:yes");
         }
 
         /// <summary>
@@ -795,6 +797,7 @@ namespace WinFormsApp1
 
         }
 
+
         //Windowsモードに切り替え
         //これはレジストリキーを元に戻す
         //実行すると再起動して、ユーザー切り替え実行
@@ -875,18 +878,60 @@ namespace WinFormsApp1
                     if (currentShell == @"C:\Windows\ShellLauncher\WinFormsApp1.exe")
                     {
                         // 共通: ShellをExplorerに変更
-                        key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+                        // key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
 
                         if (isEmbeddedEdition)
                         {
-                            // Embedded: 自動ログオン設定＋再起動
-                            key.SetValue("DefaultUserName", "serverconsole", RegistryValueKind.String);
-                            key.SetValue("DefaultPassword", "adminconsole", RegistryValueKind.String);
-                            key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
 
-                            MessageBox.Show("設定を反映させました。\n変更を適用するため、再起動します。",
-                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                            // Embedded: 自動ログオン設定＋再起動
+                            using (Form2 f2 = new Form2())
+                            {
+                                f2.ShowDialog();
+                                int sresult = (int)f2.Tag; // Tag から 1 (OK) または 2 (Cancel) を取得
+
+                                if (sresult == 2) // Cancel
+                                {
+                                    MessageBox.Show(
+                                        "操作を取り消しました。",
+                                        "キャンセル",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information
+                                    );
+                                    return; // 後続処理を止める
+                                }
+                                else if (sresult == 1) // OK
+                                {
+                                    // ★修正点：ユーザー情報を Form2 の別のプロパティから取得する★
+                                    string[] userInfo = f2.UserInfo; // 例えば、UserInfoプロパティから取得
+                                                                     // あるいは、f2.UserName や f2.Password のような専用プロパティから取得
+
+                                    string username = userInfo[0];
+                                    string password = userInfo[1];
+
+                                    using (var winlogonKey = Registry.LocalMachine.OpenSubKey(
+                                        @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
+                                    {
+                                        winlogonKey.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+                                        winlogonKey.SetValue("DefaultUserName", username, RegistryValueKind.String);
+                                        winlogonKey.SetValue("DefaultPassword", password, RegistryValueKind.String);
+                                    }
+
+                                    MessageBox.Show(
+                                        "設定を反映させました。\n変更を適用するため、再起動します。",
+                                        "環境設定",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information
+                                    );
+
+                                    key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+                                    // Administrator 無効化
+                                    Process.Start("net", "user administrator /active:no");
+
+                                    // 再起動
+                                    System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                                }
+                            }
+
                         }
                         else if (isServerEdition)
                         {
@@ -930,8 +975,7 @@ namespace WinFormsApp1
         //ウィンドウを最背面に移動
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            SetWindowPos(this.Handle, HWND_BOTTOM, 0, 0, 0, 0,
-                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+            Process.Start("net", "user administrator /active:yes");
         }
 
         // Win32 API定義
