@@ -1,56 +1,196 @@
-# 🌟 ShellLauncher v1.9 Summary
+# 🚀 マイクラサーバー専用 シェルランチャー ドキュメント
 
-## 🧩 目的 (Purpose)
-- MSI インストーラー方式の導入  
-- シェルランチャーから Windows デスクトップへ切り替える際のユーザー選択機能を強化  
-- Windows 7～11、Windows Server、Windows IoT Enterprise まで幅広い環境に最適化  
-- 全体的な安定性向上とリソース削減  
+このシェルランチャーは、自己満足で作成した用途不明のソフトウェアです。  
+ソースコードは公開しています。使用は**自己責任**でお願いします。
 
 ---
 
-# 🛠️ 変更点 (Changes)
-
-## 🇯🇵 日本語
-
-### 🚀 コア改善
-- アプリケーションを **管理者権限必須** に変更し、安定動作を確保  
-- ユーザー切り替え操作をキャンセルした後、再度切り替えを押すと  
-  **資格情報入力画面が表示されなくなるバグを修正**
-- インストーラー形式を **MSI のみに統一**
-- Windows IoT Enterprise に合わせて内部処理を再最適化
-
-### 📉 パフォーマンス向上
-- メモリ使用量を **最低 200MB 削減**
-- CPU 使用率を改善し、より均等なリソース配分に調整  
+## 目次
+1. [ドキュメント・情報](#ドキュメント情報)
+2. [注意事項](#注意事項)
+3. [改変・導入について](#改変導入について)
+4. [サポート対象OS](#サポート対象os)
+   - [Windows Server](#windows-server)
+   - [Windows Embedded / IoT](#windows-embedded--iot)
+   - [Windows Enterprise LTSC](#windows-enterprise-ltsc)
+5. [サポート対象外OS](#サポート対象外os)
+6. [OSに組み込む場合の注意](#osに組み込む場合の注意)
+7. [著作権・ライセンス](#著作権ライセンス)
 
 ---
 
-## 🌍 English
+## 📄 ドキュメント情報
 
-### 🚀 Core Improvements
-- Application now **requires administrator privileges** for consistent and stable operation  
-- Fixed an issue where, after canceling a user switch,  
-  the **credential dialog would not appear** on the next attempt  
-- Installer format unified to **MSI only**  
-- Internal logic re-optimized for **Windows IoT Enterprise**
-
-### 📉 Performance Enhancements
-- Reduced memory usage by **at least 200MB**  
-- Improved CPU efficiency and resource balancing  
+PDF版はこちらから閲覧できます：  
+[📄 View on Google Drive](https://drive.google.com/file/d/19cAzcT2R6E5SQnot3yOcxvUkj5k8s2uq/view?usp=sharing)
 
 ---
 
-# 📦 v1.9 Release Cycle
+## ⚠️ 注意事項
 
-## ✔️ v1.9 Next Pre-Release
-- Introduced MSI installer  
-- Improved user-switch logic  
-- Rechecked optimization for Windows 7–11  
-
-## ✔️ v1.9 Release Candidate (RC1 / RC2)
-- Fixed incorrect post-install behavior  
-- Switched to mandatory administrator execution  
-- Verified operation across Windows 7–11 and Windows Server  
- 
+- 無理な設定は避けてください。  
+- 不適切な設定により、システムが不安定になる場合があります。
 
 ---
+
+## 🛠 改変・導入について
+
+- 改変は**自分のPCまたはサーバーでのみ**行ってください。  
+- OSに組み込む場合は、安定した環境で作業してください。  
+- 対応OSはすべて**Windows依存**です。  
+- Windows Serverは**Standardエディションのみ公式サポート**。  
+  DatacenterやEnterpriseは動作する場合がありますがサポート外です。
+
+---
+
+## ✅ サポート対象OS
+
+### Windows Server
+- Windows Server 2008 R2  
+- Windows Server 2012 R2  
+- Windows Server 2019  
+- Windows Server 2022  
+- Windows Server 2025  
+
+※Standardエディション必須。DatacenterやEnterpriseは非サポート。
+
+### Windows Embedded / IoT
+- Windows Embedded Standard 7  
+- Windows 10 IoT Enterprise  
+- Windows 11 IoT Enterprise  
+- Windows 10 IoT Enterprise LTSC 2021  
+- Windows 11 IoT Enterprise LTSC 2024  
+
+**制限**  
+- 本番環境での使用禁止  
+- 最大15人想定  
+- サーバー機能以外の使用禁止
+
+### Windows Enterprise LTSC
+- Windows 10 Enterprise LTSC 2021  
+- Windows 11 Enterprise LTSC 2024  
+
+**制限**  
+- 本番環境での使用禁止  
+- 最大15人想定  
+- サーバー機能以外の使用禁止
+
+---
+
+## ❌ サポート対象外OS
+
+- Windows 10 Home / Pro  
+- Windows 10 Enterprise 2016 LTSB以前  
+- Windows Server 2003 R2以前  
+
+これらは不具合やカーネル不一致の可能性があります。
+
+---
+
+## 💻 OSに組み込む場合の注意
+
+- `install.wim`などに組み込む場合は、ライセンスを必ず確認してください：  
+  - MC Server Soft  
+  - Microsoft Windows  
+  - 本ソフトウェアのライセンス条項  
+- 現在のリリースはすべて**ベータ版**です。
+
+---
+
+## 📄 著作権・ライセンス
+
+**製作者:** ゆっくりFred  
+**All rights reserved.**  
+
+改良・配布する場合は、**事前に製作者に連絡**してください。
+
+---
+
+# 🚀 Minecraft Server Shell Launcher Documentation
+
+This Shell Launcher was originally created for personal satisfaction.  
+The source code is **publicly available**. Use at your **own risk**.
+
+---
+
+## 📄 Documentation & Information
+
+PDF version:  
+[📄 View on Google Drive](https://drive.google.com/file/d/19cAzcT2R6E5SQnot3yOcxvUkj5k8s2uq/view?usp=sharing)
+
+---
+
+## ⚠️ Important Notice
+
+- Do not apply unreasonable settings.  
+- Improper settings may cause **system instability**.
+
+---
+
+## 🛠 Modification & Deployment
+
+- Modify only on your **own computer or server**.  
+- Integrate into OS only on **stable environments**.  
+- Requires **Windows Server OS**.  
+- Only **Standard Edition** supported; Datacenter or Enterprise may work but are not officially supported.
+
+---
+
+## ✅ Supported OS Editions
+
+### Windows Server
+- Windows Server 2008 R2  
+- Windows Server 2012 R2  
+- Windows Server 2019  
+- Windows Server 2022  
+- Windows Server 2025  
+
+### Windows Embedded / IoT
+- Windows Embedded Standard 7  
+- Windows 10 IoT Enterprise  
+- Windows 11 IoT Enterprise  
+- Windows 10 IoT Enterprise LTSC 2021  
+- Windows 11 IoT Enterprise LTSC 2024  
+
+**Restrictions:**  
+- Not for production use  
+- Up to 15 players  
+- Limited to server functions only
+
+### Windows Enterprise LTSC
+- Windows 10 Enterprise LTSC 2021  
+- Windows 11 Enterprise LTSC 2024  
+
+**Restrictions:**  
+- Not for production use  
+- Up to 15 players  
+- Limited to server functions only
+
+---
+
+## ❌ Unsupported Editions
+
+- Windows 10 Home / Pro  
+- Windows 10 Enterprise 2016 LTSB or earlier  
+- Windows Server 2003 R2 or older  
+
+May cause **unexpected errors** or **kernel mismatches**.
+
+---
+
+## 💻 Notes for OS Integration
+
+- When integrating into `install.wim`, read all licenses:  
+  - MC Server Soft  
+  - Microsoft Windows  
+  - This Software License Agreement  
+- All releases are **beta versions**.
+
+---
+
+## 📄 Copyright & License
+
+**Author:** ゆっくりFred  
+**All rights reserved.**  
+
+Contact the author before modifying or redistributing.
