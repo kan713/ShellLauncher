@@ -316,11 +316,11 @@ namespace WinFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(
-    "シャットダウンしますか？",  // ダイアログのメッセージ
-    "確認",               // ダイアログのタイトル
-    MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
-    MessageBoxIcon.Question   // 質問アイコンを表示
-);
+                "シャットダウンしますか？",  // ダイアログのメッセージ
+                "確認",               // ダイアログのタイトル
+                MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
+                MessageBoxIcon.Question   // 質問アイコンを表示
+            );
 
             // OK（Yes）が押された場合に再起動を実行
             if (result == DialogResult.Yes)
@@ -412,7 +412,18 @@ namespace WinFormsApp1
         // Firefoxを起動
         private void button6_Click(object sender, EventArgs e)
         {
-            Process.Start("C:\\Program Files\\Mozilla Firefox\\Firefox.exe");
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://www.google.com",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("既定のブラウザに問題があります。 " + ex.Message);
+            }
         }
 
         //ログオフ
@@ -995,4 +1006,5 @@ namespace WinFormsApp1
         }
     }
 }
+
 
