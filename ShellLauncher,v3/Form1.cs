@@ -1,0 +1,740 @@
+﻿using Microsoft.Win32;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using WinFormsApp1;
+
+namespace ShellLauncher_v3
+{
+
+
+    public partial class Form1 : Form
+    {
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+
+
+        private void DisableCtrlAltDel()
+        {
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", true))
+            {
+                if (key != null)
+                    key.SetValue("DisableCAD", 1, RegistryValueKind.DWord);
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Alt + F4
+            if (keyData == (Keys.Alt | Keys.F4))
+            {
+                return true; // 殺す
+            }
+
+            // Ctrl + Shift + Esc（タスクマネージャ）
+            if (keyData == (Keys.Control | Keys.Shift | Keys.Escape))
+            {
+                return true; // 殺す
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            Process.Start("taskkill", "/f /im explorer.exe");
+
+            // フルスクリーン化
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+
+            button15.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            monthCalendar1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            // デスクトップを非表示（永続）
+            HideDesktop();
+
+            // タイマーで「デスクトップが復活してないか」を永久監視
+            timer1.Interval = 1500;
+            timer1.Tick += (s, e) => HideDesktop();
+            timer1.Start();
+            //net user administartor (newpassword)を定義
+            Process.Start("net", "user administrator /active:yes");
+
+            if (!IsSupportedEdition())
+            {
+                Application.Exit(); // エディションが一致しない場合はアプリケーションを終了
+                Process.Start("explorer.exe");
+            }
+            
+        }
+
+        private void HideDesktop()
+        {
+            // デスクトップ（Progman）を非表示
+            IntPtr progman = FindWindow("Progman", null);
+            if (progman != IntPtr.Zero)
+                ShowWindow(progman, SW_HIDE);
+
+            // WorkerW も念のため非表示
+            IntPtr workerw = FindWindow("WorkerW", null);
+            if (workerw != IntPtr.Zero)
+                ShowWindow(workerw, SW_HIDE);
+        }
+
+
+
+
+        /// <summary>
+        /// レジストリからWindowsエディションを取得
+        /// </summary>
+        /// <returns>エディション名</returns>
+        private string GetWindowsEdition()
+        {
+            string edition = "不明なエディション";
+
+            try
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key != null)
+                    {
+                        edition = key.GetValue("ProductName")?.ToString() ?? "エディション情報なし";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"エディション情報の取得に失敗しました: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return edition;
+        }
+
+        /// <summary>
+        /// サポートされるエディションか確認
+        /// 
+        /// </summary>
+        /// <returns>サポートされる場合はtrue、そうでない場合はfalse</returns>
+        private bool IsSupportedEdition()
+        {
+            string edition = GetWindowsEdition();
+
+            // サポートされるエディションの最終チェック用
+            string[] supportedEditions = {
+        "Windows Embedded Standard",
+        "Windows 10 IoT Enterprise LTSC 2021",
+        "Windows 10 IoT Enterprise LTSC 2024",
+        "Windows 10 Enterprise LTSC 2021",
+        "Windows 10 Enterprise LTSC 2024",
+        "Windows Embedded 8.1 Industry Pro",
+        "Windows 10 IoT Enterprise",
+        "Windows 10 Home",
+        "Windows 10 Pro",
+        "Windows 11 Home",
+        "Windows 11 Pro",
+        "Windows 7 Home Premium",
+        "Windows 7 Professional",
+        "Windows 7 Ultimate",
+        "Windows 8.1 Pro",
+        "Windows 8.1",
+        "Windows 8 Pro",
+        "Windows 8",
+        "Windows 10 Pro for Workstations",
+        "Windows 11 Pro for Workstations",
+        "Windows 10 Enterprise",
+        "Windows 11 Enterprise"
+    };
+
+            // エディション別分類
+            string[] ltscEditions = {
+        "Windows 10 Enterprise LTSC 2021",
+        "Windows 10 Enterprise LTSC 2024"
+    };
+
+            string[] personalEditions = {
+        "Windows 10 Home",
+        "Windows 10 Pro",
+        "Windows 11 Home",
+        "Windows 11 Pro",
+        "Windows 7 Home Premium",
+        "Windows 7 Professional",
+        "Windows 7 Ultimate",
+        "Windows 8.1 Pro",
+        "Windows 8.1",
+        "Windows 8 Pro",
+        "Windows 8",
+        "Windows 10 Pro for Workstations",
+        "Windows 11 Pro for Workstations",
+        "Windows 10 Enterprise",
+        "Windows 11 Enterprise"
+    };
+
+            string[] embeddedEditions = {
+        "Windows 10 Enterprise LTSC 2019",
+        "Windows 10 IoT Enterprise LTSC 2021",
+        "Windows 10 IoT Enterprise LTSC 2024",
+        "Windows Embedded Standard",
+        "Windows 10 IoT Enterprise",
+        "Windows Embedded 8.1 Industry Pro"
+    };
+
+            bool isLtscEdition = ltscEditions.Any(edition.Contains);
+            bool isPersonalEdition = personalEditions.Any(edition.Contains);
+            bool isEmbeddedEdition = embeddedEditions.Any(edition.Contains);
+
+            try
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
+                {
+                    if (key != null)
+                    {
+                        string currentShell = key.GetValue("Shell")?.ToString();
+
+                        // LTSC は特別な変更不要
+                        if (isLtscEdition)
+                        {
+                            MessageBox.Show("開発環境向けの設定が適用されます。", "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            System.Diagnostics.Process.Start("explorer.exe");
+                            return true;
+                        }
+
+                        // Personal Edition 用
+                        else if (isPersonalEdition)
+                        {
+                            if (currentShell != "C:\\Windows\\ShellLauncher\\ShellLauncher_v3.exe")
+                            {
+                                key.SetValue("Shell", "C:\\Windows\\ShellLauncher\\ShellLauncher_v3.exe", RegistryValueKind.String);
+
+                                // 管理者パスワード変更
+                                try
+                                {
+                                    var psi = new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = "net",
+                                        Arguments = "user Administrator onlyuseraccount",
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardError = true
+                                    };
+
+                                    using (var proc = System.Diagnostics.Process.Start(psi))
+                                    {
+                                        string output = proc.StandardOutput.ReadToEnd();
+                                        string error = proc.StandardError.ReadToEnd();
+                                        proc.WaitForExit();
+
+                                        if (proc.ExitCode != 0)
+                                        {
+                                            MessageBox.Show("管理者パスワードの変更に失敗しました。\n\nエラー出力:\n" + error,
+                                                "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            return false;
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("パスワード変更で例外発生:\n" + ex.Message, "例外", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
+
+                                MessageBox.Show("一般向けWindowsを検知しました。\n一部制約がありますが動作に支障はありません。\n環境設定を適用します。",
+                                    "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                key.SetValue("DefaultUserName", "Administrator", RegistryValueKind.String);
+                                key.SetValue("DefaultPassword", "onlyuseraccount", RegistryValueKind.String);
+                                key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+
+                                System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        // Embedded Edition 用
+                        else if (isEmbeddedEdition)
+                        {
+                            if (currentShell != "C:\\Windows\\ShellLauncher\\ShellLauncher_v3.exe")
+                            {
+                                key.SetValue("Shell", "C:\\Windows\\ShellLauncher\\ShellLauncher_v3.exe", RegistryValueKind.String);
+
+                                // 管理者パスワードを net user で変更
+                                try
+                                {
+                                    //net user administartor (newpassword)を定義
+                                    var psi = new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = "net",
+                                        Arguments = "user Administrator mainconsole",
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true,
+                                        RedirectStandardOutput = true,
+                                        RedirectStandardError = true
+                                    };
+
+                                    using (var proc = System.Diagnostics.Process.Start(psi))
+                                    {
+                                        // ターミナル出力を読み取る（必要ならログに使える）
+                                        string output = proc.StandardOutput.ReadToEnd();
+                                        string error = proc.StandardError.ReadToEnd();
+                                        proc.WaitForExit();
+
+                                        if (proc.ExitCode != 0)
+                                        {
+                                            MessageBox.Show(
+                                                "管理者パスワードの変更に失敗しました。\n\nエラー出力:\n" + error,
+                                                "エラー",
+                                                MessageBoxButtons.OK,
+                                                MessageBoxIcon.Error
+                                            );
+                                            // 失敗したら続行しない（必要に応じて true/false の扱いを変えて）
+                                            return false;
+                                        }
+                                        // 成功ログ（デバッグ用）
+                                        // MessageBox.Show("管理者パスワードを変更しました。\n" + output);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("パスワード変更を実行中に例外が発生しました:\n" + ex.Message, "例外", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
+
+                                MessageBox.Show("一般向けWindowsを検知しました。\n一部制約があります\n環境適用のため再起動します。",
+                                    "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                key.SetValue("DefaultUserName", "Administrator", RegistryValueKind.String);
+                                key.SetValue("DefaultPassword", "onlyuseraccount", RegistryValueKind.String);
+                                key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+
+                                System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        // サポート外 OS の場合
+                        else if (currentShell == @"C:\Windows\ShellLauncher\ShellLauncher_v3.exe")
+                        {
+                            key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+                            MessageBox.Show("サポートされていないOSです。\n復元のため再起動します。",
+                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                            return false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"WinLogonの設定変更に失敗しました: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // 最終チェック：サポートリストに含まれるか
+            foreach (string s in supportedEditions)
+            {
+                if (edition.Contains(s))
+                    return true;
+            }
+
+            return false;
+        }
+
+
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+    "シャットダウンしますか？",  // ダイアログのメッセージ
+    "確認",               // ダイアログのタイトル
+    MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
+    MessageBoxIcon.Question   // 質問アイコンを表示
+);
+
+            // OK（Yes）が押された場合に再起動を実行
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    Process.Start("shutdown.exe", "/s /t 0");
+                }
+                catch (Exception ex)
+                {
+                    // 失敗した場合にエラーメッセージを表示
+                    MessageBox.Show("シャットダウンに失敗しました: " + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // キャンセル（いいえ）が押された場合は何もしない
+                MessageBox.Show("シャットダウンがキャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "再起動しますか？",  // ダイアログのメッセージ
+                "確認",               // ダイアログのタイトル
+                MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
+                MessageBoxIcon.Question   // 質問アイコンを表示
+            );
+
+            // OK（Yes）が押された場合に再起動を実行
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    Process.Start("shutdown.exe", "/r /t 0");
+                }
+                catch (Exception ex)
+                {
+                    // 失敗した場合にエラーメッセージを表示
+                    MessageBox.Show("再起動に失敗しました: " + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // キャンセル（いいえ）が押された場合は何もしない
+                MessageBox.Show("再起動がキャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void button14_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                   "シャットダウンしますか？\n" +  // ダイアログのメッセージ
+                   "システムがWindows 7の場合リカバリメニューが正しく機能しない場合があります。\n" +  // ダイアログのメッセージ
+                   "よろしいですか？\n",  // ダイアログのメッセージ
+                   "確認",               // ダイアログのタイトル
+                   MessageBoxButtons.YesNo,  // 「はい」と「いいえ」のボタンを表示
+                   MessageBoxIcon.Question   // 質問アイコンを表示
+            );
+
+            // OK（Yes）が押された場合に再起動を実行
+            if (result == DialogResult.Yes)
+            {
+                try
+                //リカバリーモード切り替えコマンドを実行
+                {
+                    MessageBox.Show("リカバリメニューを起動します。", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Process.Start("shutdown.exe", "/r /o /t 0");
+                }
+                catch (Exception ex)
+                {
+                    // 失敗した場合にエラーメッセージを表示
+                    MessageBox.Show("シャットダウンに失敗しました: " + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // キャンセル（いいえ）が押された場合は何もしない
+                MessageBox.Show("シャットダウンがキャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void button19_Click(object sender, EventArgs e)
+        {
+            string edition = GetWindowsEdition();
+
+
+
+            // サポートされるエディション名のリスト
+            string[] supportedEditions = {
+                "Windows Embedded Standard",
+                "Windows 10 IoT Enterprise LTSC 2021",
+                "Windows 10 IoT Enterprise LTSC 2024",
+                "Windows 10 Enterprise LTSC 2021",
+                "Windows 10 Enterprise LTSC 2024",
+                "Windows Embedded 8.1 Industry Pro",
+                "Windows 10 IoT Enterprise",
+                "Windows 10 Home",
+                "Windows 10 Pro",
+                "Windows 11 Home",
+                "Windows 11 Pro",
+                "Windows 7 Home Premium",
+                "Windows 7 Professional",
+                "Windows 7 Ultimate",
+                "Windows 8.1 Pro",
+                "Windows 8.1",
+                "Windows 8 Pro",
+                "Windows 8",
+                "Windows 10 Pro for Workstations",
+                "Windows 11 Pro for Workstations",
+                "Windows 10 Enterprise",
+                "Windows 11 Enterprise"
+
+            };
+
+
+
+            //ここから下に書いてるものはエディション別に分類
+            //モード切替を自動で実施するために必要
+
+
+            //開発環境用
+            string[] ltscEditions = {
+
+            "Windows 10 Enterprise LTSC 2021",
+            "Windows 10 Enterprise LTSC 2024"
+        };
+
+            // PersonalEdition 配列名はそのまま
+            string[] PersonalEdition = {
+
+                "Windows 10 Home",
+                "Windows 10 Pro",
+                "Windows 11 Home",
+                "Windows 11 Pro",
+                "Windows 7 Home Premium",
+                "Windows 7 Professional",
+                "Windows 7 Ultimate",
+                "Windows 8.1 Pro",
+                "Windows 8.1",
+                "Windows 8 Pro",
+                "Windows 8",
+                "Windows 10 Pro for Workstations",
+                "Windows 11 Pro for Workstations",
+                "Windows 10 Enterprise",
+                "Windows 11 Enterprise"
+        };
+
+            //組み込み機器用
+            string[] embeddedEditions = {
+            "Windows 10 Enterprise LTSC 2019",
+            "Windows 10 IoT Enterprise LTSC 2021",
+            "Windows 10 IoT Enterprise LTSC 2024",
+            "Windows Embedded Standard",
+            "Windows 10 IoT Enterprise",
+            "Windows Embedded 8.1 Industry Pro"
+        };
+
+            // 判定
+            bool isLtscEdition = ltscEditions.Any(edition.Contains);
+            bool isPersonalEdition = PersonalEdition.Any(edition.Contains);
+            bool isEmbeddedEdition = embeddedEditions.Any(edition.Contains);
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
+            {
+                DialogResult result = MessageBox.Show(
+                    "Windowsモードに切り替えますか？",
+                    "マネージャーを終了",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                if (result == DialogResult.Yes)
+                {
+                    string currentShell = key.GetValue("Shell")?.ToString();
+
+                    if (currentShell == "C:\\Windows\\ShellLauncher\\ShellLauncher_v3.exe")
+                    {
+                        // 共通: ShellをExplorerに変更
+                        // key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+
+                        if (isEmbeddedEdition)
+                        {
+
+                            // Embedded: 自動ログオン設定＋再起動
+                            using (WinFormsApp1.Form2 f2 = new WinFormsApp1.Form2())
+                            {
+                                f2.ShowDialog();
+                                int sresult = (int)f2.Tag; // Tag から 1 (OK) または 2 (Cancel) を取得
+
+                                if (sresult == 2) // Cancel
+                                {
+                                    MessageBox.Show(
+                                        "操作を取り消しました。",
+                                        "キャンセル",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information
+                                    );
+                                    return; // 後続処理を止める
+                                }
+                                else if (sresult == 1) // OK
+                                {
+                                    // ★修正点：ユーザー情報を Form2 の別のプロパティから取得する★
+                                    string[] userInfo = f2.UserInfo; // 例えば、UserInfoプロパティから取得
+                                                                     // あるいは、f2.UserName や f2.Password のような専用プロパティから取得
+
+                                    string username = userInfo[0];
+                                    string password = userInfo[1];
+
+                                    using (var winlogonKey = Registry.LocalMachine.OpenSubKey(
+                                        @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
+                                    {
+                                        winlogonKey.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+                                        winlogonKey.SetValue("DefaultUserName", username, RegistryValueKind.String);
+                                        winlogonKey.SetValue("DefaultPassword", password, RegistryValueKind.String);
+                                    }
+
+                                    MessageBox.Show(
+                                        "設定を反映させました。\n変更を適用するため、再起動します。",
+                                        "環境設定",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information
+                                    );
+
+                                    key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+                                    // Administrator 無効化
+                                    Process.Start("net", "user administrator /active:no");
+
+                                    // 再起動
+                                    System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                                }
+                            }
+
+                        }
+                        else if (isPersonalEdition)
+                        {
+                            using (RegistryKey winlogonKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true))
+                            {
+                                // 自動ログオンを無効化
+                                winlogonKey.SetValue("AutoAdminLogon", "0", RegistryValueKind.String);
+
+                                // デフォルトユーザー情報もクリア
+                                winlogonKey.SetValue("DefaultUserName", "", RegistryValueKind.String);
+                                winlogonKey.SetValue("DefaultPassword", "", RegistryValueKind.String);
+                            }
+
+                            // Shell を Explorer に戻す（必要な場合のみ）
+                            key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+
+                            // Administrator 無効化
+                            Process.Start("net", "user administrator /active:no");
+
+                            // 再起動してログイン画面に戻す
+                            Process.Start("shutdown", "/r /t 0");
+                        }
+                        else if (isLtscEdition)
+                        {
+                            // LTSC: 再起動なしで終了
+                            MessageBox.Show("設定を反映しました。\nこのウィンドウを終了します。",
+                                "環境設定", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Close();
+                            System.Diagnostics.Process.Start("logoff");
+                        }
+                        else
+                        {
+                            // それ以外（サポート外）
+                            key.SetValue("Shell", "explorer.exe", RegistryValueKind.String);
+
+                            MessageBox.Show(
+                                "既定のWindowsがサポート対象外のものです。\n復元して再起動します。",
+                                "エラー",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("キャンセルされました。", "キャンセル",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private string selectedExePath = null;
+
+        // button11: ユーザーがアプリを選択
+        private void button11_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "実行ファイル (*.exe)|*.exe";
+                ofd.Title = "起動するアプリを選択してください";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    selectedExePath = ofd.FileName;
+                    MessageBox.Show($"選択されたアプリ:\n{selectedExePath}", "確認", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        // button9: 選択したアプリを起動
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(selectedExePath))
+            {
+                MessageBox.Show("まず起動するアプリを選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            ProcessStartInfo psi = new ProcessStartInfo(selectedExePath);
+
+            // フルスクリーンなら引数追加など可能（必要に応じて）
+            // if (radioFullscreen.Checked) psi.Arguments = "-fullscreen";
+
+            Process p = Process.Start(psi);
+
+            // ウィンドウ最大化したい場合
+            // p.WaitForInputIdle();
+            // ShowWindow(p.MainWindowHandle, SW_SHOWMAXIMIZED);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://www.google.com",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("既定のブラウザに問題があります。 " + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            Process.Start("notepad.exe");
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            using (AboutBox1 f2 = new AboutBox1()) ;
+            {
+                AboutBox1 f2 = new();
+                f2.ShowDialog();
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            DateTime d = DateTime.Now;
+            label4.Text = d.ToString("HH:mm:ss");
+            var screen = Screen.FromControl(this);
+            if (this.Bounds != screen.Bounds)
+                this.Bounds = screen.Bounds;
+        }
+    }
+
+}
+
+        
+    
